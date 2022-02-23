@@ -1,0 +1,49 @@
+{
+  "name": "party-parrots",
+  "version": "1.0.0",
+  "description": "Parrot party for everyone",
+  "main": "./src/PoolParty",
+  "scripts": {
+    "lint": "eslint .",
+    "build": "tsc",
+    "samples:simple": "ts-node samples/simple-task",
+    "samples:complex": "ts-node samples/complex-task",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/careerteamhamburg/party-parrots.git"
+  },
+  "keywords": [
+    "Threads",
+    "workers",
+    "typescript"
+  ],
+  "author": "developers@careerteam.de",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://bitbucket.org/careerteamhamburg/party-parrots/issues"
+  },
+  "homepage": "https://bitbucket.org/careerteamhamburg/party-parrots#readme",
+  "devDependencies": {
+    "@types/node-fetch": "^2.6.1",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0",
+    "eslint-plugin-standard": "^5.0.0",
+    "isomorphic-fetch": "^3.0.0",
+    "node-fetch": "^3.2.0",
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "config": "^3.3.7",
+    "@types/isomorphic-fetch": "^0.0.35",
+    "ts-node": "^10.5.0",
+    "tsc-prog": "^2.2.1",
+    "tslog": "^3.3.2",
+    "typescript": "^4.5.5",
+    "uuid": "^8.3.2"
+  }
+}
