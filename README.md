@@ -6,7 +6,7 @@ This library has as purpose the creation of a pool of NodeJs workers (Parrots) u
 ## Installation
 NPM
 ```
-npm install --save pool-party
+npm install --save worker-parrot-party
 ```
 
 ## Motivation
@@ -60,7 +60,7 @@ Scenario.
 Let's say you need to process thousands of data and need to make a request for all of those results. You can make the definition of all of that process and "inject" the logic to the worker thread, to delegate that logic to an independent process.
 
 ``` javascript
-import { PoolParty } from 'PoolParty'
+import { PoolParty } from 'worker-parrot-party'
 
 // ****************************************************
 // This is the isolated logic we want our worker to execute
