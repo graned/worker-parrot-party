@@ -1,5 +1,5 @@
 # Pool Party 
-This library has as purpose the creation of a pool of NodeJs workers (Parrots) by using Typescript.
+This library has as purpose the creation of a pool of NodeJs workers (Parrots) using Typescript.
 
 <img src="./pictures/parrot.gif" width="20%" height="50%"><img src="./pictures/parrot.gif" width="20%" height="50%"><img src="./pictures/parrot.gif" width="20%" height="50%"><img src="./pictures/parrot.gif" width="20%" height="50%">
 
