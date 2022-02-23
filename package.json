@@ -1,5 +1,5 @@
 {
-  "name": "party-parrots",
+  "name": "worker-parrot-party",
   "version": "1.0.0",
   "description": "Parrot party for everyone",
   "main": "dist/index.js",
@@ -15,7 +15,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/careerteamhamburg/party-parrots.git"
+    "url": "git+ssh://git@bitbucket.org/graned/worker-parrot-party.git"
   },
   "keywords": [
     "Threads",
