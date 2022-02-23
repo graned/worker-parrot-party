@@ -8,8 +8,7 @@
     "lint": "eslint .",
     "build": "tsc",
     "samples:simple": "ts-node samples/simple-task",
-    "samples:complex": "ts-node samples/complex-task",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "samples:complex": "ts-node samples/complex-task"
   },
   "files": [
     "/dist"
@@ -23,7 +22,7 @@
     "workers",
     "typescript"
   ],
-  "author": "developers@careerteam.de",
+  "author": "gran_ed@hotmail.com",
   "license": "WTFPL",
   "bugs": {
     "url": "https://bitbucket.org/careerteamhamburg/party-parrots/issues"
