@@ -5,13 +5,15 @@ import { ScriptManager } from './ScriptManager'
 
 /**
  * This interface represents the configuration of the PoolParty. 
- * task: The function to be executed by the parrots.
- * partySize: The number of parrots to be used.
- * basePath: Path to where the automatic generated scripts are stored.
- * compiledFolderName: The name of the folder where the compiled scripts are stored.
- * resourceLimits: Worker threads resource limits.
- * onSuccess: Callback to be executed when all the tasks are completed.
- * onError: Callback to be executed when an error occurs.
+ * - task: The function to be executed by the parrots.
+ * - partySize: The number of parrots to be used.
+ * - basePath: Path to where the automatic generated scripts are stored.
+ * - compiledFolderName: The name of the folder where the compiled scripts are stored.
+ * - libraryDeclaration: Definition of libraries to import to the worker script.
+ * - helpers: Definition of helper functions to be used in the worker script.
+ * - resourceLimits: Worker threads resource limits.
+ * - onSuccess: Callback to be executed when all the tasks are completed.
+ * - onError: Callback to be executed when an error occurs.
  */
 export interface PoolPartyConfig {
   task: Function
