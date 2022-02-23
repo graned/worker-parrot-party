@@ -25,9 +25,9 @@
   "author": "gran_ed@hotmail.com",
   "license": "WTFPL",
   "bugs": {
-    "url": "https://bitbucket.org/careerteamhamburg/party-parrots/issues"
+    "url": "https://github.com/graned/worker-parrot-party/issues"
   },
-  "homepage": "https://bitbucket.org/careerteamhamburg/party-parrots#readme",
+  "homepage": "https://github.com/graned/worker-parrot-party#readme",
   "devDependencies": {
     "@types/node-fetch": "^2.6.1",
     "eslint": "^7.32.0",
