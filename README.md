@@ -18,8 +18,19 @@ The library dinamically creates a worker script typescript file and compiles thi
 NOTE: At the moment, all Parrots in the pool will share the same logic of execution. There is no way to dinamically change the logic
 
 ## Usage
+Import declaration
+### Javascript
 ```javascript
-import { PoolParty } from 'PoolParty'
+const workerParrotParty = require('worker-parrot-party')
+```
+### Typescript
+```javascript
+import { PoolParty } from 'worker-parrot-party'
+```
+## Examples
+### Typescript
+```javascript
+import { PoolParty } from 'worker-parrot-party'
 
 // Define an async function task to execute in the threads
 async function veryComplexTask (myVar: string): string {
