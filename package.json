@@ -1,6 +1,6 @@
 {
   "name": "worker-parrot-party",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Parrot party for everyone",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
