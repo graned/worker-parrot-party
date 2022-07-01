@@ -31,11 +31,22 @@ export class Parrot {
     this._workerThread = new Worker(execFilePath, opts)
   }
 
+  private _messageHandler(resolve) {
+    return (executionResult) => {
+      resolve(executionResult)
+    }
+  }
+
   async runTask(args: Array<any>): Promise<any> {
     return new Promise((resolve, reject) => {
-      this._workerThread.on('message', executionResult => { resolve(executionResult) })
+      this._workerThread.on('message', this._messageHandler(resolve))
+      this._workerThread.removeListener('message', this._messageHandler(resolve))
+
       this._workerThread.on('error', reject)
+      this._workerThread.removeListener('error', reject)
+      
       this._workerThread.on('exit', reject)
+      this._workerThread.removeListener('exit', reject)
 
       this._logger.info(`[${this.pid}] Parrot will execute the task`)
       this._workerThread.postMessage({ args, pid: this._id })
