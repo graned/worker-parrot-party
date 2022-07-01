@@ -94,28 +94,6 @@ export class PoolParty {
   }
 
   /**
-   * Function to schedule a retry of tasks, if there are no idle parrots. As soon as a parrot becomes idle, the task is
-   * executed.
-   * @param retryTask Task to be retried
-   */
-  private _scheduleTaskToRetry(retryTask: Task): void {
-    this._retryTaskQueue.push(retryTask)
-
-    if (this._retryInterval == null) {
-      this._retryInterval = setInterval(() => {
-        if (this._parrotIdleQueue.length > 0) {
-          const task: Task = this._retryTaskQueue.shift()
-          this.run(task.taskArgs)
-
-          if (this._retryTaskQueue.length === 0) {
-            clearInterval(this._retryInterval)
-          }
-        }
-      }, this._poolPartyConfig.retryInterval || 1000)
-    }
-  }
-
-  /**
    * Function that Handles Parrot errors and makes sure to spawn a new parrot if the error is not a NoIdleParrotError.
    * Additionally, kills the parrot instance that caused the error.
    * 
@@ -137,17 +115,6 @@ export class PoolParty {
     this._logger.info(`Spawn new parrot [${recoveryParrot.pid}]`)
     this._parrotIdleQueue.push(recoveryParrot)
     this._poolPartyConfig.onError(parrotError)
-  }
-
-  /**
-   * Schedules a task to be retryed within the configured retry interval.
-   * @param taskArgs Arguments to be passed to the task
-   */
-  private _handleTaskRetry(taskArgs: Array<any>): void {
-    this._logger.info('No idle parrot found, spawning new parrot')
-    const retryTask: Task = new Task(taskArgs)
-
-    this._scheduleTaskToRetry(retryTask)
   }
 
   /**
@@ -175,7 +142,7 @@ export class PoolParty {
       const error: CustomErrors = parrotError as CustomErrors
 
       if (parrotError.type === 'NO_IDLE_PARROT_ERROR') {
-        this._handleTaskRetry(args)
+        this._logger.info('No idle parrot found')
       } else {
         this._handleParrotError(parrotWorker, error)
       }
