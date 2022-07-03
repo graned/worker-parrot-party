@@ -1,10 +1,11 @@
+/* eslint-disable max-classes-per-file */
 import { Logger } from 'tslog'
 import { Parrot } from './Parrot'
 import { NoIdleParrotError, CustomErrors } from './CustomErrors'
 import { ScriptManager } from './ScriptManager'
 
 /**
- * This interface represents the configuration of the PoolParty. 
+ * This interface represents the configuration of the PoolParty.
  * - task: The function to be executed by the parrots.
  * - partySize: The number of parrots to be used.
  * - basePath: Path to where the automatic generated scripts are stored.
@@ -21,7 +22,7 @@ export interface PoolPartyConfig {
   retryInterval?: number
   basePath?: string
   compiledFolderName?: string
-  libraryDeclaration?: Array<{ name: string, importDeclaration: string }>
+  libraryDeclaration?: Array<{ name: string; importDeclaration: string }>
   helpers?: Array<Function>
   resourceLimits?: {
     maxOldGenerationSizeMb: number
@@ -29,12 +30,12 @@ export interface PoolPartyConfig {
     codeRangeSizeMb: number
     stackSizeMb: number
   }
-  onSuccess(result: any): any
-  onError(error: any): any
+  onSuccess(result: unknown): unknown
+  onError(error: unknown): unknown
 }
 
 class Task {
-  constructor(private readonly _taskArgs) { }
+  constructor(private readonly _taskArgs) {}
 
   get taskArgs() {
     return this._taskArgs
@@ -43,23 +44,25 @@ class Task {
 
 export class PoolParty {
   private readonly _logger: Logger = new Logger({ name: 'PoolParty' })
+
   private readonly _parrotIdleQueue: Array<Parrot> = []
+
   private readonly _retryTaskQueue: Array<Task> = []
+
   private _retryInterval: NodeJS.Timer = null
+
   private _executionScriptFilePath: string
 
-  constructor(
-    private readonly _poolPartyConfig: PoolPartyConfig
-  ) {
+  constructor(private readonly _poolPartyConfig: PoolPartyConfig) {
     const scriptManager: ScriptManager = new ScriptManager(
       this._poolPartyConfig.compiledFolderName || './worker-script-dist',
-      this._poolPartyConfig.basePath || './'
+      this._poolPartyConfig.basePath || './',
     )
 
     this._executionScriptFilePath = scriptManager.createAndCompileExecutionScript(
       this._poolPartyConfig.task,
       this._poolPartyConfig.helpers,
-      this._poolPartyConfig.libraryDeclaration
+      this._poolPartyConfig.libraryDeclaration,
     )
     this._spawnParrots(this._executionScriptFilePath)
   }
@@ -72,7 +75,7 @@ export class PoolParty {
     while (this._parrotIdleQueue.length < this._poolPartyConfig.partySize) {
       const parrot: Parrot = new Parrot({
         execFilePath: executionFilePath,
-        resourceLimits: this._poolPartyConfig.resourceLimits
+        resourceLimits: this._poolPartyConfig.resourceLimits,
       })
 
       this._logger.info(`Spawn parrot [${parrot.pid}]`)
@@ -96,20 +99,20 @@ export class PoolParty {
   /**
    * Function that Handles Parrot errors and makes sure to spawn a new parrot if the error is not a NoIdleParrotError.
    * Additionally, kills the parrot instance that caused the error.
-   * 
+   *
    * @param parrot Worker parrot instance that throwed the error
    * @param parrotError Error that was thrown by the parrot
    */
   private _handleParrotError(parrot: Parrot, parrotError: CustomErrors): void {
     this._logger.fatal(`Parrot [${parrot.pid}] crashed due to error, spawning new parrot`)
-    this._logger.error('Error: ' + parrotError)
+    this._logger.error(`Error: ${parrotError}`)
 
     // Terminates the process to avoid memory leaks
     parrot.kill()
 
     const recoveryParrot: Parrot = new Parrot({
       execFilePath: this._executionScriptFilePath,
-      resourceLimits: this._poolPartyConfig.resourceLimits
+      resourceLimits: this._poolPartyConfig.resourceLimits,
     })
 
     this._logger.info(`Spawn new parrot [${recoveryParrot.pid}]`)
@@ -118,17 +121,17 @@ export class PoolParty {
   }
 
   /**
-   * 
+   *
    * @param args Arguments to be passed to the task function
-   * @returns A Promise that resolves to the result of the task function. Additionally calls the onSuccess function 
+   * @returns A Promise that resolves to the result of the task function. Additionally calls the onSuccess function
    * if provided. If there is an error during the task function execution, calls the onError function if provided.
-   * 
+   *
    * Finally, if there are no idle parrots, the task is added to the retry queue and waits until there is an idle parrot.
-   * 
+   *
    * Furthermore, when an error occurs and if the error is not identified as a NoIdleParrotError, the onError function is
    * called, and we spawn a new parrot, since the error causes the parrot to be unavailable for new tasks.
    */
-  async run(args: Array<any>): Promise<Object> {
+  async run(args: Array<unknown>): Promise<Object> {
     let parrotExecResult: Object = {}
     let parrotWorker: Parrot
 

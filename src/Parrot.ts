@@ -1,6 +1,6 @@
 import { Worker, WorkerOptions } from 'worker_threads'
 import { v4 } from 'uuid'
-import { Logger } from "tslog"
+import { Logger } from 'tslog'
 
 /**
  * This interface represents the configuration of the worker taken from the official site:
@@ -18,33 +18,33 @@ export interface ParrotConfig {
 
 export class Parrot {
   private readonly _logger: Logger = new Logger({ name: 'Parrot' })
+
   private readonly _id: string
+
   private _workerThread: Worker
 
-
-  constructor(
-    private readonly _parrotConfig: ParrotConfig
-  ) {
+  constructor(private readonly _parrotConfig: ParrotConfig) {
     this._id = v4()
     const { execFilePath, ...resourceLimits } = this._parrotConfig
     const opts: WorkerOptions = { resourceLimits } as WorkerOptions
     this._workerThread = new Worker(execFilePath, opts)
   }
 
+  // eslint-disable-next-line class-methods-use-this
   private _messageHandler(resolve) {
     return (executionResult) => {
       resolve(executionResult)
     }
   }
 
-  async runTask(args: Array<any>): Promise<any> {
+  async runTask(args: Array<unknown>): Promise<unknown> {
     return new Promise((resolve, reject) => {
       this._workerThread.on('message', this._messageHandler(resolve))
       this._workerThread.removeListener('message', this._messageHandler(resolve))
 
       this._workerThread.on('error', reject)
       this._workerThread.removeListener('error', reject)
-      
+
       this._workerThread.on('exit', reject)
       this._workerThread.removeListener('exit', reject)
 
