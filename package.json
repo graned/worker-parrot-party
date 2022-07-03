@@ -9,9 +9,11 @@
     "format": "prettier --write \"src/**/*.ts\" \"dist/**/*.js\"",
     "build": "tsc -d",
     "prepare": "npm run build",
+    "publishMinor": "npm version minor & npm publish",
+    "publishPatch": "npm version patch & npm publish",
+    "publishMajor": "npm version major & npm publish",
     "prepublishOnly": "npm run lint",
     "preversion": "npm run lint",
-    "version": "npm run format && git add -A src",
     "postversion": "git push && git push --tags",
     "samples:simple": "ts-node samples/simple-task",
     "samples:complex": "ts-node samples/complex-task"
