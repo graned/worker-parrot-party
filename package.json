@@ -3,15 +3,21 @@
   "version": "1.1.1",
   "description": "Parrot party for everyone",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/*.d.ts",
   "scripts": {
     "lint": "eslint .",
-    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"dist/**/*.js\"",
+    "build": "tsc -d",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run lint",
+    "preversion": "npm run lint",
+    "version": "npm run format && git add -A src",
+    "postversion": "git push && git push --tags",
     "samples:simple": "ts-node samples/simple-task",
     "samples:complex": "ts-node samples/complex-task"
   },
   "files": [
-    "/dist"
+    "/dist/**/*"
   ],
   "repository": {
     "type": "git",
@@ -31,21 +37,22 @@
   "devDependencies": {
     "@types/isomorphic-fetch": "^0.0.36",
     "@types/node-fetch": "^2.6.1",
-    "eslint": "^7.32.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.25.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.2.0",
-    "eslint-plugin-standard": "^5.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.30.3",
+    "eslint": "^8.16.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "isomorphic-fetch": "^3.0.0",
-    "node-fetch": "^3.2.0"
+    "node-fetch": "^3.2.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
   },
   "dependencies": {
     "config": "^3.3.7",
     "ts-node": "^10.5.0",
     "tsc-prog": "^2.2.1",
     "tslog": "^3.3.2",
-    "typescript": "^4.5.5",
     "uuid": "^8.3.2"
   }
 }
