@@ -1,31 +1,51 @@
-// https://eslint.org/docs/user-guide/configuring
-
 module.exports = {
-  root: true,
+  parser: '@typescript-eslint/parser',
   parserOptions: {
-    parser: 'babel-eslint'
-  },
-  env: {
-    node: true,
-    mocha: true
+    ecmaVersion: 2020, // Allows for the parsing of modern ECMAScript features
+    sourceType: 'module', // Allows for the use of imports
   },
   extends: [
-    // https://github.com/standard/standard/blob/master/docs/RULES-en.md
-    'standard'
+    'airbnb-base',
+    'plugin:@typescript-eslint/recommended', // Uses the recommended rules from the @typescript-eslint/eslint-plugin
+    'plugin:import/typescript',
+    'plugin:prettier/recommended',
   ],
-  // required to lint *.vue files
-  plugins: [],
-  // add your custom rules here
+  plugins: ['@typescript-eslint', 'prettier'],
   rules: {
-    // allow async-await
-    'generator-star-spacing': 'off',
-    'no-unsafe-negation': 'off',
-    'no-useless-catch': 'off',
-    // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-shadow': 0,
+    'import/first': 0,
+    'no-use-before-define': 0,
+    'no-underscore-dangle': 0,
+    'no-useless-constructor': 0,
+    'import/prefer-default-export': 0,
+    '@typescript-eslint/ban-types': 0,
+    '@typescript-eslint/ban-ts-comment': 0,
+    '@typescript-eslint/no-shadow': 0,
+    'import/no-extraneous-dependencies': 0,
+    'class-methods-use-this': 1,
+    'no-empty-function': ['error', { allow: ['constructors'] }],
+    'import/extensions': [
+      'error',
+      'ignorePackages',
+      {
+        ts: 'never',
+        js: 'never',
+        mjs: 'never',
+        jsx: 'never',
+      },
+    ],
+    'prettier/prettier': [
+      'error',
+      {
+        endOfLine: 'auto',
+        singleQuote: true,
+        semi: false,
+        trailingComma: 'all',
+        printWidth: 120,
+      },
+    ],
+    'no-console': 2,
+    // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
+    // e.g. "@typescript-eslint/explicit-function-return-type": "off",
   },
-  globals: {
-    sinon: 'readable',
-    expect: 'readable'
-  }
 }
