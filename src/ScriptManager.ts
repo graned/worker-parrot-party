@@ -91,7 +91,7 @@ export class ScriptManager {
     const libsString: string = libs?.reduce((acc: string, lib: { name: string; importDeclaration: string }) => {
       return lib?.importDeclaration == null || lib?.importDeclaration === ''
         ? acc.concat(`import '${lib?.name}'\n`)
-        : acc.concat(`import { ${lib?.importDeclaration} } from '${lib?.name}'\n`)
+        : acc.concat(`import ${lib?.importDeclaration} from '${lib?.name}'\n`)
     }, '')
 
     return `
