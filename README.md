@@ -1,34 +1,47 @@
 # Worker Parrot Party!
+
 This library has as purpose the creation of a pool of NodeJs workers (Parrots) using Typescript.
 
 <img src="./pictures/parrot.gif" width="20%" height="50%"><img src="./pictures/parrot.gif" width="20%" height="50%"><img src="./pictures/parrot.gif" width="20%" height="50%"><img src="./pictures/parrot.gif" width="20%" height="50%">
 
 ## Installation
+
 NPM
+
 ```
 npm install --save worker-parrot-party
 ```
 
 ## Motivation
+
 The main purpose of this library is to simplify the usage of Worker Threads with typescript. Additionally, to offer a more flexible way to create worker threads with more complex logic.
 
 ## How it works
+
 The library dinamically creates a worker script typescript file and compiles this on runtime. Finally we use the Worker Node js library to spawn a thread with the automatically generated file.
 
 NOTE: At the moment, all Parrots in the pool will share the same logic of execution. There is no way to dinamically change the logic
 
 ## Usage
+
 Import declaration
+
 ### Javascript
+
 ```javascript
 const workerParrotParty = require('worker-parrot-party')
 ```
+
 ### Typescript
+
 ```javascript
 import { PoolParty } from 'worker-parrot-party'
 ```
+
 ## Examples
+
 ### Typescript
+
 ```javascript
 import { PoolParty } from 'worker-parrot-party'
 
@@ -49,17 +62,23 @@ const poolPartyConfig = {
 // Create Instance
 const poolParty: PoolParty = new PoolParty(poolPartyConfig)
 
-// Run your task in a thread
-poolParty.run('myNiceVariable')
+// Spawn the parrot in the pool
+poolParty.spawnParrots().then(() => {
+    // Run your task in a thread
+    poolParty.run('myNiceVariable')
+})
+
+// NOTE: You may use async/await
 ```
 
 ### Complex process
-Sometimes we need to be able to do a very complex process that may require helper functions. 
+
+Sometimes we need to be able to do a very complex process that may require helper functions.
 
 Scenario.
 Let's say you need to process thousands of data and need to make a request for all of those results. You can make the definition of all of that process and "inject" the logic to the worker thread, to delegate that logic to an independent process.
 
-``` javascript
+```javascript
 import { PoolParty } from 'worker-parrot-party'
 
 // ****************************************************
@@ -96,11 +115,15 @@ const poolPartyConfig = {
 // Create Instance
 const poolParty: PoolParty = new PoolParty(poolPartyConfig)
 
-// Run your task in a thread
-poolParty.run('myNiceVariable')
+// Spawn the parrot in the pool
+poolParty.spawnParrots().then(() => {
+    // Run your task in a thread
+    poolParty.run('myNiceVariable')
+})
 ```
 
 ## Pool configuration variables
+
 - task [**_REQUIRED_**]: The function to be executed by the worker parrots.
 
 - partySize [**_REQUIRED_**]: The number of parrots to be used.
@@ -121,3 +144,6 @@ poolParty.run('myNiceVariable')
 
 - resourceLimits [**_OPTIONAL_**]: Worker threads resource limits.
 
+## Known issues
+
+- Compiled typescript files, not being cleaned. WORKAROUND: You may just delete the auto generated folders to "clean" the state
