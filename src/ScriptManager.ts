@@ -1,3 +1,4 @@
+/* eslint-disable no-await-in-loop */
 /* eslint-disable class-methods-use-this */
 import * as path from 'path'
 import * as fs from 'fs'
@@ -123,11 +124,11 @@ export class ScriptManager {
    * @param task
    * @returns full qualified path of the JS worker script.
    */
-  createAndCompileExecutionScript(
+  async createAndCompileExecutionScript(
     task: Function,
     handlers?: Array<Function>,
     libs?: Array<{ name: string; importDeclaration: string }>,
-  ): string {
+  ): Promise<string> {
     // REVISIT: We should verify that the task is in fact a promise
 
     const executionScriptContent = this._createWorkerScriptString(task, handlers, libs)
@@ -151,6 +152,36 @@ export class ScriptManager {
 
     this._compileScriptFile(tsFileName, workerScriptFolder)
 
-    return path.join(this._basePath, this._outDir, jsFileName)
+    return this.getFullPathOfCompiledFile(path.join(this._basePath, this._outDir), jsFileName)
+  }
+
+  private async listFolderFiles(srcFolder: string): Promise<string[]> {
+    const entries = await fs.readdirSync(srcFolder, { withFileTypes: true })
+    let files: Array<string> = entries
+      .filter((file) => !file.isDirectory())
+      .map((file) => path.join(srcFolder, file.name))
+
+    const folders = entries.filter((folder) => folder.isDirectory())
+
+    // eslint-disable-next-line no-plusplus
+    for (let idx = 0; idx < folders.length; idx++) {
+      const folder = folders[idx]
+      const nestedFolderFiles = await this.listFolderFiles(path.join(srcFolder, folder.name))
+      files = files.concat(nestedFolderFiles)
+    }
+
+    return files
+  }
+
+  private async getFullPathOfCompiledFile(searchDirectory: string, jsFileName: string): Promise<string> {
+    const compiledFolderStructure = await this.listFolderFiles(searchDirectory)
+
+    const foundPath = compiledFolderStructure.filter((fileName) => fileName.endsWith(jsFileName))
+
+    if (!foundPath) {
+      throw new Error(`Compiled file not found [${jsFileName}]`)
+    }
+
+    return foundPath.pop()
   }
 }
