@@ -34,47 +34,38 @@ export interface PoolPartyConfig {
   onError(error: unknown): unknown
 }
 
-class Task {
-  constructor(private readonly _taskArgs) {}
-
-  get taskArgs() {
-    return this._taskArgs
-  }
-}
-
 export class PoolParty {
   private readonly _logger: Logger = new Logger({ name: 'PoolParty' })
 
   private readonly _parrotIdleQueue: Array<Parrot> = []
 
-  private readonly _retryTaskQueue: Array<Task> = []
-
-  private _retryInterval: NodeJS.Timer = null
-
   private _executionScriptFilePath: string
 
-  constructor(private readonly _poolPartyConfig: PoolPartyConfig) {
+  constructor(private readonly _poolPartyConfig: PoolPartyConfig) {}
+
+  private async _compileExecutionScripts(): Promise<void> {
     const scriptManager: ScriptManager = new ScriptManager(
       this._poolPartyConfig.compiledFolderName || './worker-script-dist',
       this._poolPartyConfig.basePath || './',
     )
 
-    this._executionScriptFilePath = scriptManager.createAndCompileExecutionScript(
+    this._executionScriptFilePath = await scriptManager.createAndCompileExecutionScript(
       this._poolPartyConfig.task,
       this._poolPartyConfig.helpers,
       this._poolPartyConfig.libraryDeclaration,
     )
-    this._spawnParrots(this._executionScriptFilePath)
   }
 
   /**
    * Function that sapwns the worker parrots based on the configuration size provided.
    * @param executionFilePath Path to the execution script
    */
-  private _spawnParrots(executionFilePath: string): void {
+  async spawnParrots(): Promise<void> {
+    await this._compileExecutionScripts()
+
     while (this._parrotIdleQueue.length < this._poolPartyConfig.partySize) {
       const parrot: Parrot = new Parrot({
-        execFilePath: executionFilePath,
+        execFilePath: this._executionScriptFilePath,
         resourceLimits: this._poolPartyConfig.resourceLimits,
       })
 
