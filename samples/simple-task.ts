@@ -30,9 +30,10 @@ const poolPartyConfig = {
 }
 
 const poolParty: PoolParty = new PoolParty(poolPartyConfig)
-
-poolParty.run([10, 'stuff-1'])
-poolParty.run([50, 'stuff-3'])
-poolParty.run([20, 'stuff-2'])
-poolParty.run([42, 'stuff-42'])
-poolParty.run([5, 'stuff-5'])
+poolParty.spawnParrots().then(() => {
+  poolParty.run([10, 'stuff-1'])
+  poolParty.run([50, 'stuff-3'])
+  poolParty.run([20, 'stuff-2'])
+  poolParty.run([42, 'stuff-42'])
+  poolParty.run([5, 'stuff-5'])
+})

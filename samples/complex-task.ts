@@ -3,31 +3,20 @@
 /* eslint-disable no-plusplus */
 /* eslint-disable no-await-in-loop */
 import { PoolParty, PoolPartyConfig } from '../src/PoolParty'
-import 'isomorphic-fetch'
-
-async function fetchToSite(url: string): Promise<Response> {
-  return fetch(url)
-}
-
-async function pageFetcher(urlsToFetch: Array<string>): Promise<void> {
-  for (const url of urlsToFetch) {
-    const response = await fetchToSite(url)
-    console.log(response.status)
-    console.log(await response.json())
-  }
-}
+import { pageFetcherTask, responseParser } from './helpers/tasks/ComplexTask'
 
 const poolPartyConfig: PoolPartyConfig = {
   partySize: 2,
   basePath: __dirname,
   libraryDeclaration: [
     {
-      name: 'isomorphic-fetch',
-      importDeclaration: '',
+      // NOTE: This path is relative to the worker script generated folder
+      name: '../helpers/utils/ComplexHelper',
+      importDeclaration: '* as ch',
     },
   ],
-  helpers: [fetchToSite],
-  task: pageFetcher,
+  helpers: [responseParser],
+  task: pageFetcherTask,
   onSuccess: () => {
     console.log('all good in the hood!')
   },
@@ -46,5 +35,10 @@ const memesUrls: Array<string> = [
   'https://www.pocket-lint.com/de-de/software/news/152027-diese-meme-existieren-nicht-und-werden-von-ai-erstellt',
 ]
 
-poolParty.run([nicolasCageUrls])
-poolParty.run([memesUrls])
+poolParty
+  .spawnParrots()
+  .then(() => {
+    poolParty.run([nicolasCageUrls])
+    poolParty.run([memesUrls])
+  })
+  .catch(console.error)
