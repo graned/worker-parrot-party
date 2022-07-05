@@ -104,8 +104,13 @@ export class ScriptManager {
         ${stringifedFunction}
         
         parentPort.on('message', async data => {
+          try {
             const result = await ${taskName}(...data.args)
             parentPort.postMessage({ data: result })
+          } catch(error) {
+            // Unexpected error happen
+            console.error(error)
+          }
         })
         `
   }
