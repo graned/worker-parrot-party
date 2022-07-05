@@ -31,16 +31,16 @@ export class Parrot {
   }
 
   // eslint-disable-next-line class-methods-use-this
-  private _messageHandler(resolve) {
-    return (executionResult) => {
+  private _messageHandler(resolve, workerThread: Worker) {
+    return function handler(executionResult) {
       resolve(executionResult)
+      workerThread.removeListener('message', handler)
     }
   }
 
   async runTask(args: Array<unknown>): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      this._workerThread.on('message', this._messageHandler(resolve))
-      this._workerThread.removeListener('message', this._messageHandler(resolve))
+      this._workerThread.on('message', this._messageHandler(resolve, this._workerThread))
 
       this._workerThread.on('error', reject)
       this._workerThread.removeListener('error', reject)
