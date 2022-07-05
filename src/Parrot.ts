@@ -38,15 +38,27 @@ export class Parrot {
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  private _messageErrorHandler(resolve, workerThread: Worker) {
+    return function handler(executionResult) {
+      resolve(executionResult)
+      workerThread.removeListener('error', handler)
+    }
+  }
+
+  // eslint-disable-next-line class-methods-use-this
+  private _messageExitHandler(resolve, workerThread: Worker) {
+    return function handler(executionResult) {
+      resolve(executionResult)
+      workerThread.removeListener('exit', handler)
+    }
+  }
+
   async runTask(args: Array<unknown>): Promise<unknown> {
     return new Promise((resolve, reject) => {
       this._workerThread.on('message', this._messageHandler(resolve, this._workerThread))
-
-      this._workerThread.on('error', reject)
-      this._workerThread.removeListener('error', reject)
-
-      this._workerThread.on('exit', reject)
-      this._workerThread.removeListener('exit', reject)
+      this._workerThread.on('error', this._messageErrorHandler(reject, this._workerThread))
+      this._workerThread.on('exit', this._messageExitHandler(reject, this._workerThread))
 
       this._logger.info(`[${this.pid}] Parrot will execute the task`)
       this._workerThread.postMessage({ args, pid: this._id })
